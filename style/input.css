@@ -1,0 +1,25 @@
+@import url("./fonts/style.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Inter, sans-serif;
+    color: #222;
+  }
+
+  .active {
+    color: rgb(0, 72, 255);
+  }
+
+  .active::before {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    width: 100%;
+    height: 2px;
+    background: rgb(0, 72, 255);
+  }
+}
