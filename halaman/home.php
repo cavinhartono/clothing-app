@@ -66,17 +66,19 @@ include_once('../algoritma/Config.php');
       <ul class="flex gap-8 justify-between items-center">
         <?php
 
-        $statement = $db->prepare("SELECT `id`, `src` FROM `products` WHERE `id` = 4 OR `id` = 8 OR `id` = 9");
+        $statement = $db->prepare("SELECT `discounts`.`product_id`, `src`, `discounts`.`disount` FROM `products` 
+                                INNER JOIN `discounts` ON `products`.`id` = `discounts`.`product_id`");
         $statement->execute();
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($products as $product) {
+          $persentage = $product['disount'] * 100;
           echo "<li class='group relative'>
-            <a href='./product.php?id=$product[id]'>
+            <a href='./product.php?id=$product[product_id]'>
               <img src='./gambar/$product[src]' class='w-[350px] h-auto'>
               <div class='absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#222222BF] to-[#22222200] flex justify-center items-center overflow-hidden opacity-0 transition-all group-hover:overflow-visible group-hover:opacity-100'>
-                <h1 class='font-serif text-8xl text-white'>75%</h1>
+                <h1 class='font-serif text-8xl text-white'>$persentage%</h1>
               </div>
             </a>
           </li>";
@@ -84,7 +86,7 @@ include_once('../algoritma/Config.php');
         ?>
       </ul>
     </section>
-    <footer class="p-[100px]">&copy; Tugas Kelompok Logika dan Algoritma oleh Kelompok 4&trade;</footer>
+    <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 4&trade;</footer>
   </main>
   <script>
     const header = document.querySelector('header');
