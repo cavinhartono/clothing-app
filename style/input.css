@@ -10,16 +10,14 @@
     color: #222;
   }
 
-  .active {
-    color: rgb(0, 72, 255);
-  }
-
-  .active::before {
+  #text-homepage::before {
     content: "";
     position: absolute;
-    bottom: -6px;
     width: 100%;
     height: 2px;
-    background: rgb(0, 72, 255);
+    background: #fff;
+    border-radius: 8px;
+    animation: name duration timing-function delay iteration-count direction
+      fill-mode;
   }
 }
