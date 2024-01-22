@@ -15,7 +15,7 @@ include_once('../algoritma/Config.php');
 </head>
 
 <body>
-  <main class="relative w-full">
+  <main class="relative w-full overflow-hidden">
     <header class="fixed top-0 left-0 w-full px-24 py-10 flex justify-between items-center shadow-none transition-all -translate-y-0 z-10">
       <h1 class="font-medium text-white">BajuOnlen</h1>
       <ul class="flex gap-6">
@@ -40,13 +40,51 @@ include_once('../algoritma/Config.php');
         </li>
       </ul>
     </header>
-    <div class="relative p-[100px] w-1/2 max-h-screen bg-gradient-to-b from-[#850E0E] to-[#990000] flex gap-40 justify-between items-center">
-      <h1 class="text-white border-b" id="text-homepage">
+    <div class="relative p-[100px] w-full max-h-screen bg-gradient-to-b from-[#850E0E] to-[#990000] flex gap-40 justify-between items-center">
+      <h1 class="relative text-white" id="text-homepage">
         <span class="text-6xl"> Discount All Item up to</span> <br>
         <span class="text-[96px] font-extrabold py-8">75</span><s class="text-[48px] font-extrabold">%</s>
       </h1>
       <img src="./gambar/hero_image.png" class="w-[450px] h-[610px]">
     </div>
+    <div class="p-6 flex w-[200%]" id="marquee">
+      <h1 class="text-[76px]"><span id="discount">DISCOUNT ALL ITEM</span> UP TO 75%</h1>
+      <h1 class="text-[76px]"><span id="discount">DISCOUNT ALL ITEM</span> UP TO 75%</h1>
+    </div>
+    <section class="p-[100px] w-full flex justify-center gap-24 items-center">
+      <img src="./gambar/product_17.png" class="w-[350px] h-auto">
+      <div class="flex flex-col gap-8">
+        <h1 class="w-[150px] py-2 bg-blue-500 rounded-full text-white text-center">Coming Soon</h1>
+        <h1 class="text-6xl font-serif text-[#2B334A]">Leather Jacket <br /> Biawak Aseli</h1>
+        <div class="relative">
+          <h1 class="text-3xl font-serif opacity-50"><s>Rp. 400.000</s></h1>
+          <h1 class="text-5xl font-serif">Rp. 300.000</h1>
+        </div>
+      </div>
+    </section>
+    <section class="p-[100px] w-full flex justify-center gap-24 items-center">
+      <ul class="flex gap-8 justify-between items-center">
+        <?php
+
+        $statement = $db->prepare("SELECT `id`, `src` FROM `products` WHERE `id` = 4 OR `id` = 8 OR `id` = 9");
+        $statement->execute();
+
+        $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($products as $product) {
+          echo "<li class='group relative'>
+            <a href='./product.php?id=$product[id]'>
+              <img src='./gambar/$product[src]' class='w-[350px] h-auto'>
+              <div class='absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#222222BF] to-[#22222200] flex justify-center items-center overflow-hidden opacity-0 transition-all group-hover:overflow-visible group-hover:opacity-100'>
+                <h1 class='font-serif text-8xl text-white'>75%</h1>
+              </div>
+            </a>
+          </li>";
+        }
+        ?>
+      </ul>
+    </section>
+    <footer class="p-[100px]">&copy; Tugas Kelompok Logika dan Algoritma oleh Kelompok 4&trade;</footer>
   </main>
   <script>
     const header = document.querySelector('header');
