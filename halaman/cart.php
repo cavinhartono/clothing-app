@@ -38,22 +38,30 @@ $subtotal = 0;
 ?>
 
 <body>
-  <form action='./transaction.php' method='POST'>
-    <ul class="flex flex-col gap-6">
-      <?php foreach ($carts as $cart) : ?>
-        <li class="w-full flex gap-6">
-          <img src="./gambar/<?= $cart['src'] ?>" class="w-[100px] h-[100px]">
-          <div class="flex flex-col gap-4">
-            <h1 class="text-black text-lg font-serif"><?= $cart['name'] ?></h1>
-            <p class="text-grey-800 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
-          </div>
-        </li>
-        <?php $subtotal += $cart['price'] * $cart['qty'] ?>
-      <?php endforeach; ?>
-    </ul>
-    <h1 class="text-black text-lg">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
-    <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?>>Buy</button>
-  </form>
+  <main class="relative w-full overflow-hidden">
+    <form action='./transaction.php' method='POST'>
+      <ul class="flex flex-col gap-6">
+        <?php if (!empty($carts)) : ?>
+          <?php foreach ($carts as $cart) : ?>
+            <li class="w-full flex gap-6 bg-white shadow-md px-4 py-8">
+              <img src="./gambar/<?= $cart['src'] ?>" class="w-[100px] h-[100px]">
+              <div class="flex flex-col gap-4">
+                <h1 class="text-lg font-serif"><?= $cart['name'] ?></h1>
+                <p class="opacity-75 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
+              </div>
+            </li>
+            <?php $subtotal += $cart['price'] * $cart['qty'] ?>
+          <?php endforeach; ?>
+          <li class="w-full bg-white shadow-md px-4 py-8">
+            <h1 class="text-lg">Ongkir</h1>
+            <p class="opacity-75 text-md">Rp. 3.000</p>
+          </li>
+        <?php endif; ?>
+      </ul>
+      <h1 class="text-black text-lg">Total, Rp. <?= number_format(($subtotal + 3000), 0, ".", ".") ?></h1>
+      <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?>>Buy</button>
+    </form>
+  </main>
 </body>
 
 </html>
