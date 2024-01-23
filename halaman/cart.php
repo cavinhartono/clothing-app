@@ -13,6 +13,10 @@ require_once('../algoritma/Config.php');
 
 $auth = $_SESSION['auth'];
 
+if (!isset($auth)) {
+  header("Location: login.php");
+}
+
 if (isset($_POST['submit'])) {
   $statement = $db->prepare("INSERT INTO carts(`user_id`, `product_id`, `qty`) VALUES (:user_id, :product_id, :qty)");
   $statement->bindParam(':product_id', $_POST['product_id']);

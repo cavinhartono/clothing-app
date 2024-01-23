@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($auth && password_verify($password, $auth['password'])) {
       $_SESSION['auth'] = $auth['id'];
       $_SESSION['counter'] = 0;
-      header("Location: ../../halaman/home.php");
+      header("Location: ../halaman/home.php");
     } else {
       $_SESSION['counter']++;
       if ($_SESSION['counter'] > 3) {

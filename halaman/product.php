@@ -14,53 +14,102 @@ require_once("../algoritma/Config.php");
 
 <body>
   <main class="container">
-    <header class="fixed top-0 left-0 w-full px-24 py-6 flex justify-between items-center shadow-none transition-all -translate-y-0 z-10">
-      <h1 class="font-medium text-lg">Clothing</h1>
+    <header class="fixed top-0 left-0 w-full px-24 py-10 flex justify-between items-center shadow-none transition-all -translate-y-0 z-10">
+      <h1 class="font-medium">BajuOnlen</h1>
       <ul class="flex gap-6">
-        <li class="relative active"><a href="#">Home</a></li>
-        <li class="relative"><a href="#">Products</a></li>
-        <li class="relative"><a href="#">About</a></li>
+        <li class="relative opacity-75"><a href="./home.php">Home</a></li>
+        <li class="relative"><a href="./products.php">Products</a></li>
+        <li class="relative opacity-75"><a href="./about.php">About</a></li>
       </ul>
       <ul class="flex gap-6">
-        <li class="text-gray-800">
-          <a href="#">
-            <span class="w-6 h-6"></span>
+        <li class="relative">
+          <a href="./cart.php">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M4.00488 16V4H2.00488V2H5.00488C5.55717 2 6.00488 2.44772 6.00488 3V15H18.4433L20.4433 7H8.00488V5H21.7241C22.2764 5 22.7241 5.44772 22.7241 6C22.7241 6.08176 22.7141 6.16322 22.6942 6.24254L20.1942 16.2425C20.083 16.6877 19.683 17 19.2241 17H5.00488C4.4526 17 4.00488 16.5523 4.00488 16ZM6.00488 23C4.90031 23 4.00488 22.1046 4.00488 21C4.00488 19.8954 4.90031 19 6.00488 19C7.10945 19 8.00488 19.8954 8.00488 21C8.00488 22.1046 7.10945 23 6.00488 23ZM18.0049 23C16.9003 23 16.0049 22.1046 16.0049 21C16.0049 19.8954 16.9003 19 18.0049 19C19.1095 19 20.0049 19.8954 20.0049 21C20.0049 22.1046 19.1095 23 18.0049 23Z"></path>
+            </svg>
           </a>
         </li>
-        <li class="text-gray-800">
-          <a href="#">
-            <span class="w-6 h-6"></span>
+        <li class="relative">
+          <a href="./profile.php">
+            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 22H18V20C18 18.3431 16.6569 17 15 17H9C7.34315 17 6 18.3431 6 20V22H4V20C4 17.2386 6.23858 15 9 15H15C17.7614 15 20 17.2386 20 20V22ZM12 13C8.68629 13 6 10.3137 6 7C6 3.68629 8.68629 1 12 1C15.3137 1 18 3.68629 18 7C18 10.3137 15.3137 13 12 13ZM12 11C14.2091 11 16 9.20914 16 7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7C8 9.20914 9.79086 11 12 11Z"></path>
+            </svg>
           </a>
         </li>
       </ul>
     </header>
-    <div class="relative w-full min-h-screen p-24 flex justify-between items-center gap-10">
+    <div class="relative w-full min-h-screen p-24 flex items-center gap-10">
       <?php
 
       $id = $_GET['id'];
-      $products = mysqli_query(mysqli_connect("localhost", "root", "", "clothingshop"), "SELECT * FROM products WHERE `id`=$id;");
-      while ($product = mysqli_fetch_array($products)) {
-        $price = "Rp. " . number_format($product['price'], 0, ".", ".");
+      $statement = $db->prepare("SELECT * FROM products WHERE `id`=$id");
+      $statement->execute();
+
+      $product = $statement->fetchAll(PDO::FETCH_ASSOC);
+      foreach ($product as $p) {
+        $price = "Rp. " . number_format($p['price'], 0, ".", ".");
         echo "
-          <img src='./gambar/$product[src]' class='w-full h-[400px] object-cover' />
+          <img src='./gambar/$p[src]' class='w-[400px] h-auto object-cover' />
           <div>
-            <h1 class='font-serif text-6xl text-black text-justify'>$product[name]</h1>
-            <h1 class='text-2xl mt-4 mb-6'>$price - Stock: $product[stock]</h1>
+            <h1 class='font-serif text-6xl text-black text-justify'>$p[name]</h1>
+            <h1 class='text-2xl mt-4 mb-6'>$price - Stock: $p[stock]</h1>
             <div class='my-4 flex'>
               <form action='./cart.php' method='POST'>
-                <input type='number' name='qty' value='1' />
-                <input type='hidden' name='product_id' value='$product[id]' />
+                <input type='number' name='qty' value='1' class='border text-4xl py-4 w-[100px]' />
+                <input type='hidden' name='product_id' value='$p[id]' />
                 <button type='submit' name='submit' class='px-12 py-4 bg-blue-500 text-white rounded-sm'>Cart</button>
               </form>
             </div>
-            $product[desc]
+            $p[desc]
           </div>
         ";
       }
       ?>
 
     </div>
+    <div class="relative w-full h-screen p-[100px] flex flex-col gap-10 justify-center">
+      <h1 class="text-4xl">More Collection</h1>
+      <ul class="flex gap-10">
+        <?php
+
+        $statement = $db->prepare("SELECT * FROM `products` ORDER BY RAND() LIMIT 4");
+        $statement->execute();
+
+        $products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($products as $product) {
+          echo "
+              <li class='relative shadow-md rounded-md overflow-hidden'>
+                <a href='./product.php?id=$product[id]' class='flex flex-col gap-4'>
+                  <img src='./gambar/$product[src]' class='w-full h-[300px] object-cover' />
+                  <div class='flex justify-between items-center px-6 py-4'>
+                    <div>
+                      <h1 class='font-serif text-2xl text-black text-justify'>$product[name]</h1>
+                      <h1 class='text-lg mt-2 mb-4'>Rp. $product[price] - Stock: $product[stock]</h1>
+                    </div>
+                  </div>
+                </a>
+              </li>
+            ";
+        }
+        ?>
+      </ul>
+    </div>
+    <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 4&trade;</footer>
   </main>
+  <script>
+    const header = document.querySelector('header');
+
+    function scrolled() {
+      if (window.pageYOffset > 100) {
+        header.classList.add('-translate-y-20', 'shadow-md');
+      } else {
+        header.classList.remove('-translate-y-20', 'shadow-md');
+      }
+    }
+
+    window.addEventListener('scroll', scrolled);
+  </script>
 </body>
 
 </html>
