@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($_SESSION['counter'] > 3) {
         $_SESSION['counter'] = 0;
         echo "<script>
-          alert('Anda sudah lebih 3 kali, maka halaman ini diclose');
+          alert('Anda sudah melebihi 3 dan halaman ini akan otomatis close');
           window.close();
         </script>";
       }
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../style/output.css">
-  <title>Login</title>
+  <title><?= $_SESSION['counter'] ?> Login</title>
 </head>
 
 <body class="bg-gray-200 flex justify-center items-center min-h-screen">

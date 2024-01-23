@@ -86,7 +86,7 @@ include_once('../algoritma/Config.php');
         ?>
       </ul>
     </section>
-    <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 4&trade;</footer>
+    <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 8&trade;</footer>
   </main>
   <script>
     const header = document.querySelector('header');

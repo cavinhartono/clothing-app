@@ -8,7 +8,7 @@ require_once('../algoritma/Config.php');
 $auth = $_SESSION['auth'];
 
 if (!isset($auth)) {
-  header("Location: login.php");
+  echo "<script>window.location.href ='login.php'</script>";
 }
 
 $statement = $db->prepare("SELECT * FROM `users` WHERE `id` = $auth");

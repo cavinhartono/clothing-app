@@ -15,7 +15,7 @@ require_once('../algoritma/Config.php');
 $auth = $_SESSION['auth'];
 
 if (!isset($auth)) {
-  header("Location: login.php");
+  echo "<script>window.location.href ='login.php'</script>";
 }
 
 if (isset($_POST['submit'])) {
@@ -27,7 +27,7 @@ if (isset($_POST['submit'])) {
   header("Location: ./cart.php");
 }
 
-$statement = $db->prepare("SELECT `products`.`id`, `name`, `price`, `src`, `carts`.`qty` FROM `products` 
+$statement = $db->prepare("SELECT `carts`.`id`, `name`, `price`, `src`, `carts`.`qty` FROM `products` 
                           INNER JOIN `carts` ON `carts`.`product_id` = `products`.`id` 
                           WHERE `carts`.`user_id` = $auth");
 $statement->execute();
@@ -45,17 +45,24 @@ $subtotal = 0;
         <?php if (!empty($carts)) : ?>
           <?php foreach ($carts as $cart) : ?>
             <li class="w-full flex gap-6 items-center bg-white shadow-md px-4 py-8">
-              <img src="./gambar/<?= $cart['src'] ?>" class="w-[100px] h-[100px] object-cover">
-              <div class="flex flex-col gap-2">
-                <h1 class="text-2xl font-serif"><?= $cart['name'] ?></h1>
-                <p class="opacity-75 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
-              </div>
+              <a href="../algoritma/DeleteCart.php?id=<?= $cart['id'] ?>">
+                <img src="./gambar/<?= $cart['src'] ?>" class="w-[100px] h-[100px] object-cover">
+                <div class="flex flex-col gap-2">
+                  <h1 class="text-2xl font-serif"><?= $cart['name'] ?></h1>
+                  <p class="opacity-75 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
+                </div>
+              </a>
             </li>
             <?php $subtotal += $cart['price'] * $cart['qty'] ?>
           <?php endforeach; ?>
           <li class="w-full bg-white shadow-md px-4 py-8">
             <h1 class="text-lg">Ongkir</h1>
             <p class="opacity-75 text-md">Rp. 3.000</p>
+          </li>
+          <?php $subtotal += 3000 ?>
+        <?php else : ?>
+          <li class="w-full bg-white shadow-md px-4 py-8">
+            <h1 class="text-lg">Tidak ada produk di keranjang!</h1>
           </li>
         <?php endif; ?>
       </ul>
@@ -90,9 +97,10 @@ $subtotal = 0;
         <?php endforeach; ?>
 
       </ul>
-      <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format(($subtotal + 3000), 0, ".", ".") ?></h1>
+      <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
       <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?> class="w-[150px] py-4 bg-blue-600 text-white rounded-md">Buy</button>
     </form>
+    <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 8&trade;</footer>
   </main>
 </body>
 
