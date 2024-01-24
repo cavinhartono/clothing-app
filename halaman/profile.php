@@ -16,7 +16,9 @@ $statement_one->execute();
 
 $user = $statement_one->fetchAll(PDO::FETCH_ASSOC);
 
-$statement_two = $db->prepare("SELECT * FROM `orders` WHERE `user_id` = $auth");
+$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty` FROM `orders` 
+                              INNER JOIN `products` ON `orders`.`products_id` = `products`.`id`
+                              WHERE `user_id` = $auth");
 $statement_two->execute();
 
 $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
@@ -81,6 +83,32 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </div>
         <?php endforeach; ?>
+        <?php if (!empty($orders)) : ?>
+          <ul class="flex flex-col gap-4">
+            <?php foreach ($orders as $order) : ?>
+              <li class="relative p-4 flex gap-4 rounded-md shadow-md">
+                <img src="./gambar/<?= $order['src'] ?>" class="w-[100px] h-[100px] object-cover">
+                <div class="flex flex-col gap-4">
+                  <?php if ($order['status'] == 'pending') : ?>
+                    <span class="px-4 py-2 bg-orange-500 text-white rounded-full">
+                      Delivery
+                    </span>
+                  <?php else : ?>
+                    <span class="px-4 py-2 bg-green-300 text-white rounded-full">
+                      Complate
+                    </span>
+                  <?php endif ?>
+                  <div class="my-2">
+                    <h1 class="text-6xl font-serif"><?= $order['name'] ?></h1>
+                    <p class="text-lg opacity-75"><?= $order['qty'] ?> - Rp. <?= number_format($order['total'], 0, ".", "."); ?></p>
+                  </div>
+                </div>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        <?php else : ?>
+          <h1 class="text-6xl"></h1>
+        <?php endif; ?>
       </div>
     </div>
   </main>
