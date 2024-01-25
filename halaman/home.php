@@ -66,14 +66,14 @@ include_once('../algoritma/Config.php');
       <ul class="flex gap-8 justify-between items-center">
         <?php
 
-        $statement = $db->prepare("SELECT `discounts`.`product_id`, `src`, `discounts`.`disount` FROM `products` 
+        $statement = $db->prepare("SELECT `discounts`.`product_id`, `src`, `discounts`.`discount` FROM `products` 
                                 INNER JOIN `discounts` ON `products`.`id` = `discounts`.`product_id`");
         $statement->execute();
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($products as $product) {
-          $persentage = $product['disount'] * 100;
+          $persentage = $product['discount'] * 100;
           echo "<li class='group relative'>
             <a href='./product.php?id=$product[product_id]'>
               <img src='./gambar/$product[src]' class='w-[350px] h-auto'>

@@ -11,13 +11,17 @@
 
 <body>
   <?php
-
-  $products = "Tidak ada";
-
   if (isset($_POST['submit'])) {
-    $statement = $db->prepare("SELECT `carts`.`product_id`, `carts`.`qty` * `products`.`price` AS `subtotal`, `carts`.`qty` FROM `products`
-                          INNER JOIN `carts` ON `carts`.`product_id` = `products`.`id`
-                          WHERE `user_id` = {$_SESSION['auth']}");
+    $subtotal_query = "`products`.`price` * `qty`";
+    $statement = $db->prepare("SELECT `carts`.`product_id`, `carts`.`qty`,
+                              CASE 
+                                  WHEN `carts`.`product_id` = `products`.`id` THEN 
+                                      (`products`.`price` * `carts`.`qty`) * `discounts`.`discount`
+                                  ELSE `products`.`price` * `carts`.`qty`
+                              END AS `subtotal` FROM `carts`
+                              JOIN `products` ON `carts`.`product_id` = `products`.`id` 
+                              JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
+                              WHERE (`orders`.`user_id` = {$_SESSION['auth']})");
     $statement->execute();
 
     $carts = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -37,15 +41,5 @@
   }
   ?>
 </body>
-
-<!-- <?php if ($cart->status == 'pending') : ?>
-  <span class="text-red-600 bg-red-300 border-red-600 rounded-md">
-    Pesanan akan datang ke tujuan
-  </span>
-<?php else : ?>
-  <span class="text-green-600 bg-green-300 border-green-600 rounded-md">
-    Pesanan Anda sudah sampai tujuan
-  </span>
-<?php endif ?> -->
 
 </html>
