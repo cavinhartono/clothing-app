@@ -42,57 +42,84 @@ require_once("../algoritma/Config.php");
       <?php
 
       $id = $_GET['id'];
-      $statement = $db->prepare("SELECT * FROM products WHERE `id`=$id");
+      $statement = $db->prepare("SELECT `products`.`id`, `products`.`name`, `products`.`src`, `products`.`price`,
+                                CASE
+                                    WHEN `discounts`.`product_id` = `products`.`id` THEN
+                                        `products`.`price` * `discounts`.`discount`
+                                    ELSE `products`.`price`
+                                END AS `discounted_price` FROM `products`
+                                LEFT JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
+                                WHERE `products`.`id` = $id");
       $statement->execute();
 
       $product = $statement->fetchAll(PDO::FETCH_ASSOC);
-      foreach ($product as $p) {
-        $price = "Rp. " . number_format($p['price'], 0, ".", ".");
-        echo "
-          <img src='./gambar/$p[src]' class='w-[400px] h-auto object-cover' />
-          <div>
-            <h1 class='font-serif text-6xl text-black text-justify'>$p[name]</h1>
-            <h1 class='text-2xl mt-4 mb-6'>$price - Stock: $p[stock]</h1>
-            <div class='my-4 flex'>
-              <form action='./cart.php' method='POST'>
-                <input type='number' name='qty' value='1' class='border text-4xl py-4 w-[100px]' />
-                <input type='hidden' name='product_id' value='$p[id]' />
-                <button type='submit' name='submit' class='px-12 py-4 bg-blue-500 text-white rounded-sm'>Cart</button>
-              </form>
-            </div>
-            $p[desc]
-          </div>
-        ";
-      }
+
       ?>
 
+      <?php foreach ($product as $p) : ?>
+        <img src="./gambar/<?= $p['src'] ?>" class='w-[400px] h-auto object-cover' />
+        <div>
+          <h1 class='font-serif text-6xl text-black text-justify'><?= $p['name'] ?></h1>
+          <?php if ($p['price'] == $p['discounted_price']) : ?>
+            <h1 class='text-lg mt-2 mb-4'>
+              Rp. <?= number_format($p['price'], 0, ".", ".") ?>
+            </h1>
+          <?php else : ?>
+            <h1 class='text-lg mt-2 mb-4'>
+              Rp. <?= number_format($p['discounted_price'], 0, ".", ".") ?>
+              <s class="opacity-75">Rp. <?= number_format($p['price'], 0, ".", ".") ?></s>
+            </h1>
+          <?php endif; ?>
+          <div class='my-4 flex'>
+            <form action='./cart.php' method='POST'>
+              <input type='number' name='qty' value='1' class='border text-4xl py-4 w-[100px]' />
+              <input type='hidden' name='product_id' value="<?= $p['id'] ?>" />
+              <button type='submit' name='submit' class='px-12 py-4 bg-blue-500 text-white rounded-sm'>Cart</button>
+            </form>
+          </div>
+        </div>
+      <?php endforeach; ?>
     </div>
     <div class="relative w-full h-screen p-[100px] flex flex-col gap-10 justify-center">
       <h1 class="text-4xl">More Collection</h1>
       <ul class="flex gap-10">
         <?php
-
-        $statement = $db->prepare("SELECT * FROM `products` ORDER BY RAND() LIMIT 4");
+        $statement = $db->prepare("SELECT `products`.`id`, `products`.`name`, `products`.`src`, `products`.`price`, 
+                                  CASE
+                                      WHEN `discounts`.`product_id` = `products`.`id` THEN
+                                          `products`.`price` * `discounts`.`discount`
+                                      ELSE `products`.`price`
+                                  END AS `discounted_price` FROM `products`
+                                  LEFT JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
+                                  ORDER BY RAND() 
+                                  LIMIT 4");
         $statement->execute();
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
-
-        foreach ($products as $product) {
-          echo "
-              <li class='relative shadow-md rounded-md overflow-hidden'>
-                <a href='./product.php?id=$product[id]' class='flex flex-col gap-4'>
-                  <img src='./gambar/$product[src]' class='w-full h-[300px] object-cover' />
-                  <div class='flex justify-between items-center px-6 py-4'>
-                    <div>
-                      <h1 class='font-serif text-2xl text-black text-justify'>$product[name]</h1>
-                      <h1 class='text-lg mt-2 mb-4'>Rp. $product[price] - Stock: $product[stock]</h1>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ";
-        }
         ?>
+
+        <?php foreach ($products as $product) : ?>
+          <li class='relative shadow-md rounded-md overflow-hidden'>
+            <a href="./product.php?id=<?= $product['id'] ?>" class='flex flex-col gap-4'>
+              <img src="./gambar/<?= $product['src'] ?>" class='w-full h-[300px] object-cover' />
+              <div class='flex justify-between items-center px-6 py-4'>
+                <div>
+                  <h1 class='font-serif text-2xl text-black text-justify'><?= $product['name'] ?></h1>
+                  <?php if ($product['price'] == $product['discounted_price']) : ?>
+                    <h1 class='text-lg mt-2 mb-4'>
+                      Rp. <?= number_format($product['price'], 0, ".", ".") ?>
+                    </h1>
+                  <?php else : ?>
+                    <h1 class='text-lg mt-2 mb-4'>
+                      <s class="opacity-75">Rp. <?= number_format($product['price'], 0, ".", ".") ?></s> <br />
+                      Rp. <?= number_format($product['discounted_price'], 0, ".", ".") ?>
+                    </h1>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </a>
+          </li>
+        <?php endforeach; ?>
       </ul>
     </div>
     <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 8&trade;</footer>

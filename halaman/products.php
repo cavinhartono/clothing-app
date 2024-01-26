@@ -47,27 +47,42 @@ require_once("../algoritma/Config.php");
       <ul class="flex flex-wrap w-full p-24 justify-between gap-10">
         <?php
 
-        $statement = $db->prepare("SELECT * FROM `products`");
+        $statement = $db->prepare("SELECT `products`.`id`, `products`.`name`, `products`.`src`, `products`.`price`, 
+                                  CASE
+                                      WHEN `discounts`.`product_id` = `products`.`id` THEN
+                                          `products`.`price` * `discounts`.`discount`
+                                      ELSE `products`.`price`
+                                  END AS `discounted_price` FROM `products`
+                                  LEFT JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
+                                  ORDER BY `products`.`id`
+                                  ");
         $statement->execute();
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($products as $product) {
-          echo "
-              <li class='relative shadow-md rounded-md overflow-hidden'>
-                <a href='./product.php?id=$product[id]' class='flex flex-col gap-4'>
-                  <img src='./gambar/$product[src]' class='w-full h-[300px] object-cover' />
-                  <div class='flex justify-between items-center px-6 py-4'>
-                    <div>
-                      <h1 class='font-serif text-2xl text-black text-justify'>$product[name]</h1>
-                      <h1 class='text-lg mt-2 mb-4'>Rp. $product[price] - Stock: $product[stock]</h1>
-                    </div>
-                  </div>
-                </a>
-              </li>
-            ";
-        }
         ?>
+        <?php foreach ($products as $product) : ?>
+          <li class='relative shadow-md rounded-md overflow-hidden'>
+            <a href="./product.php?id=<?= $product['id'] ?>" class='flex flex-col gap-4'>
+              <img src="./gambar/<?= $product['src'] ?>" class='w-full h-[300px] object-cover' />
+              <div class='flex justify-between items-center px-6 py-4'>
+                <div>
+                  <h1 class='font-serif text-2xl text-black text-justify'><?= $product['name'] ?></h1>
+                  <?php if ($product['price'] == $product['discounted_price']) : ?>
+                    <h1 class='text-lg mt-2 mb-4'>
+                      Rp. <?= number_format($product['price'], 0, ".", ".") ?>
+                    </h1>
+                  <?php else : ?>
+                    <h1 class='text-lg mt-2 mb-4'>
+                      <s class="opacity-75">Rp. <?= number_format($product['price'], 0, ".", ".") ?></s>
+                      Rp. <?= number_format($product['discounted_price'], 0, ".", ".") ?>
+                    </h1>
+                  <?php endif; ?>
+                </div>
+              </div>
+            </a>
+          </li>
+        <?php endforeach; ?>
       </ul>
     </div>
     <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 8&trade;</footer>

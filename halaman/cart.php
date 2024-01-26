@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../style/output.css">
-  <title>Document</title>
+  <title>Cart</title>
 </head>
 
 <?php
@@ -27,14 +27,14 @@ if (isset($_POST['submit'])) {
   header("Location: ./cart.php");
 }
 
-$statement = $db->prepare("SELECT `carts`.`id`, `products`.`name`, `products`.`src`, `carts`.`qty`,
+$statement = $db->prepare("SELECT `carts`.`id`, `products`.`name`, `products`.`price`, `products`.`src`, `carts`.`qty`,
                           CASE
                               WHEN `discounts`.`product_id` = `products`.`id` THEN 
                                   `products`.`price` * `discounts`.`discount`
                               ELSE `products`.`price`
-                          END AS `price` FROM `carts`
-                          JOIN `products` ON `carts`.`product_id` = `products`.`id`
-                          JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
+                          END AS `discounted_price` FROM `carts`
+                          LEFT JOIN `products` ON `carts`.`product_id` = `products`.`id`
+                          LEFT JOIN `discounts` ON `discounts`.`product_id` = `products`.`id`
                           WHERE `carts`.`user_id` = $auth");
 $statement->execute();
 
@@ -74,7 +74,14 @@ $subtotal = 0;
                 <img src="./gambar/<?= $cart['src'] ?>" class="w-[100px] h-[100px] object-cover">
                 <div class="flex flex-col gap-2">
                   <h1 class="text-2xl font-serif"><?= $cart['name'] ?></h1>
-                  <p class="opacity-75 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
+                  <?php if ($cart['price'] == $cart['discounted_price']) : ?>
+                    <p class="opacity-75 text-md">Rp. <?= number_format($cart['price'], 0, ".", ".") ?> X <?= $cart['qty'] ?></p>
+                  <?php else : ?>
+                    <p class="opacity-75 text-md">
+                      <s>Rp. <?= number_format($cart['price'], 0, ".", ".") ?></s>
+                      Rp. <?= number_format($cart['discounted_price'], 0, ".", ".") ?> X <?= $cart['qty'] ?>
+                    </p>
+                  <?php endif; ?>
                 </div>
               </a>
             </li>
@@ -116,7 +123,7 @@ $subtotal = 0;
             <?php endforeach; ?>
           </ul>
           <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
-          <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?> class="w-[150px] py-4 bg-blue-600 text-white rounded-md">Buy</button>
+          <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?> class="w-[150px] py-4 bg-blue-600 text-white rounded-md disabled:opacity-50">Buy</button>
         <?php else : ?>
           <li class="w-full bg-white shadow-md px-4 py-8">
             <h1 class="text-lg">Tidak ada produk di keranjang!</h1>
