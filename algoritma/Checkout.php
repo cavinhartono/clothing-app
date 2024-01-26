@@ -30,4 +30,11 @@ if (isset($_POST['submit'])) {
     $delete_carts = $db->prepare("DELETE FROM `carts` WHERE `user_id` = {$_SESSION['auth']}");
     $delete_carts->execute();
   }
+
+  echo "
+    <script>
+      window.location.href = '../halaman/profile.php';
+      alert('Pesanan Anda sukses!');
+    </script>
+  ";
 }

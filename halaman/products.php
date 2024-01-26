@@ -63,8 +63,10 @@ require_once("../algoritma/Config.php");
         ?>
         <?php foreach ($products as $product) : ?>
           <li class='relative shadow-md rounded-md overflow-hidden'>
-            <a href="./product.php?id=<?= $product['id'] ?>" class='flex flex-col gap-4'>
-              <img src="./gambar/<?= $product['src'] ?>" class='w-full h-[300px] object-cover' />
+            <a href="./product.php?id=<?= $product['id'] ?>" class='group flex flex-col gap-4'>
+              <div class="overflow-hidden">
+                <img src="./gambar/<?= $product['src'] ?>" class='w-full h-[300px] object-cover transition-all group-hover:scale-150' />
+              </div>
               <div class='flex justify-between items-center px-6 py-4'>
                 <div>
                   <h1 class='font-serif text-2xl text-black text-justify'><?= $product['name'] ?></h1>

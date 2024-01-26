@@ -16,9 +16,11 @@ $statement_one->execute();
 
 $user = $statement_one->fetchAll(PDO::FETCH_ASSOC);
 
-$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty` FROM `orders` 
+$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty`, `created_at` FROM `orders` 
                               INNER JOIN `products` ON `orders`.`product_id` = `products`.`id`
-                              WHERE `user_id` = $auth");
+                              WHERE `user_id` = $auth
+                              ORDER BY `date` DESC
+                              ");
 $statement_two->execute();
 
 $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
@@ -79,32 +81,50 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
             </ul>
           </div>
         <?php endforeach; ?>
-        <?php if (!empty($orders)) : ?>
-          <ul class="flex flex-col gap-4 my-4">
-            <?php foreach ($orders as $order) : ?>
-              <li class="relative p-4 flex gap-8 items-center rounded-md shadow-md">
-                <img src="./gambar/<?= $order['src'] ?>" class="w-[100px] h-[100px] object-cover">
-                <div class="gap-2">
-                  <?php if ($order['status'] == 'pending') : ?>
-                    <span class="px-4 py-2 bg-orange-500 text-white rounded-full">
-                      Delivery
-                    </span>
-                  <?php else : ?>
-                    <span class="px-4 py-2 bg-green-300 text-white rounded-full">
-                      Complate
-                    </span>
-                  <?php endif ?>
-                  <div class="my-4">
-                    <h1 class="text-2xl font-serif"><?= $order['name'] ?></h1>
-                    <p class="text-lg opacity-75"><?= $order['qty'] ?> - Rp. <?= number_format($order['total'], 0, ".", "."); ?></p>
+        <section class="my-8">
+          <h1 class="px-4 text-2xl font-semibold">Transaksi</h1>
+          <?php if (!empty($orders)) : ?>
+            <ul class="flex flex-col gap-4 my-4">
+              <?php foreach ($orders as $order) : ?>
+                <li class="relative p-4 flex gap-8 items-center rounded-md shadow-md">
+                  <img src="./gambar/<?= $order['src'] ?>" class="w-[100px] h-[100px] object-cover">
+                  <div class="w-full flex justify-between items-center gap-2">
+                    <div class="mx-4">
+                      <?php if ($order['status'] == 'pending') : ?>
+                        <span class="px-4 py-2 bg-orange-500 text-white rounded-full">
+                          Delivery
+                        </span>
+                      <?php else : ?>
+                        <span class="px-4 py-2 bg-green-600 text-white rounded-full">
+                          Complate
+                        </span>
+                      <?php endif ?>
+                      <h1 class="mt-2 text-2xl font-serif"><?= $order['name'] ?></h1>
+                      <p class="text-lg opacity-75"><?= $order['qty'] ?> - Rp. <?= number_format($order['total'], 0, ".", "."); ?></p>
+                    </div>
+                    <h1 class="text-lg opacity-75">
+                      <?php
+                      $date = new DateTime();
+
+                      $calculated = $date->diff(new DateTime($order['created_at']));
+
+                      if ($calculated->days > 0) {
+                        $within_last_days = "$calculated->days hari lalu";
+                      } else {
+                        $within_last_days = "Saat ini";
+                      }
+
+                      echo $within_last_days;
+                      ?>
+                    </h1>
                   </div>
-                </div>
-              </li>
-            <?php endforeach; ?>
-          </ul>
-        <?php else : ?>
-          <h1 class="text-6xl"></h1>
-        <?php endif; ?>
+                </li>
+              <?php endforeach; ?>
+            </ul>
+          <?php else : ?>
+            <h1 class="text-6xl">Anda belum membeli melakukan transaksi</h1>
+          <?php endif; ?>
+        </section>
       </div>
     </div>
   </main>
