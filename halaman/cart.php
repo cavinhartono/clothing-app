@@ -65,7 +65,7 @@ $subtotal = 0;
         </span>
       </a>
     </header>
-    <form action='./transaction.php' method='POST'>
+    <form action='../algoritma/Checkout.php' method='POST'>
       <ul class="flex flex-col gap-6">
         <?php if (!empty($carts)) : ?>
           <?php foreach ($carts as $cart) : ?>
