@@ -15,6 +15,7 @@ require_once('../algoritma/Config.php');
 $auth = $_SESSION['auth'];
 
 if (!isset($auth)) {
+  $_SESSION['counter'] = 0;
   echo "<script>window.location.href ='login.php'</script>";
 }
 

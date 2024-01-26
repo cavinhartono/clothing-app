@@ -26,6 +26,10 @@
     animation: marquee 20s linear infinite;
   }
 
+  #greeting {
+    animation: greeting 5s linear forwards;
+  }
+
   #discount {
     color: transparent;
     -webkit-text-stroke: 2px #222;
@@ -46,6 +50,15 @@
     }
     to {
       width: 100%;
+    }
+  }
+
+  @keyframes greeting {
+    50% {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-100%);
     }
   }
 }

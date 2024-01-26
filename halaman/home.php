@@ -16,6 +16,7 @@ include_once('../algoritma/Config.php');
 
 <body>
   <main class="relative w-full overflow-hidden">
+    <h1 class="fixed bottom-0 left-0 px-4 py-2 bg-green-500 text-white text-2xl transition-all z-10" id="greeting">Hello, <?= !empty($_SESSION['name']) ? $_SESSION['name'] : "User" ?></h1>
     <header class="fixed top-0 left-0 w-full px-24 py-10 flex justify-between items-center shadow-none transition-all -translate-y-0 z-10">
       <h1 class="font-medium text-white">BajuOnlen</h1>
       <ul class="flex gap-6">

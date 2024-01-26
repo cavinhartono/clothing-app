@@ -1,8 +1,8 @@
 <?php
 
-require_once("../algoritma/Config.php");
+include_once("../algoritma/Config.php");
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
   if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($auth && password_verify($password, $auth['password'])) {
       $_SESSION['auth'] = $auth['id'];
+      $_SESSION['name'] = explode(" ", $auth['name'])[0];
       $_SESSION['counter'] = 0;
       header("Location: ../halaman/home.php");
     } else {
@@ -22,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       if ($_SESSION['counter'] > 3) {
         $_SESSION['counter'] = 0;
         echo "<script>
-          alert('Anda sudah melebihi 3 dan halaman ini akan otomatis close');
-          window.close();
+        alert('Anda sudah melebihi 3 dan halaman ini akan otomatis close');
+        window.close();
         </script>";
       }
     }
@@ -46,11 +47,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <form method="post" class="w-[400px] py-12 px-8 rounded-md bg-white shadow-sm">
     <h1 class="font-serif text-2xl text-black">Log in Account</h1>
     <div class="relative w-full mt-10 mb-6">
-      <input type="text" id="email" name="email" class="peer w-full px-3 py-2 border placeholder:text-transparent" placeholder="email">
+      <input type="text" id="email" name="email" class="peer w-full px-3 py-2 border placeholder:text-transparent" placeholder="email" required>
       <label for="email" class="absolute left-0 ml-1 -translate-y-6 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-sm">Email</label>
     </div>
     <div class="relative w-full my-6">
-      <input type="password" name="password" id="password" placeholder="Password" class="peer w-full px-3 py-2 border placeholder:text-transparent">
+      <input type="password" name="password" id="password" placeholder="Password" required class="peer w-full px-3 py-2 border placeholder:text-transparent">
       <label for="password" class="absolute left-0 ml-1 -translate-y-6 text-sm duration-100 ease-linear peer-placeholder-shown:translate-y-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-translate-y-6 peer-focus:text-sm">Password</label>
     </div>
     <button type="submit" name="submit" class="bg-blue-500 w-full py-2 text-md text-white rounded-sm">Continue</button>
