@@ -86,7 +86,7 @@ $subtotal = 0;
                 </div>
               </a>
             </li>
-            <?php $subtotal += $cart['price'] * $cart['qty'] ?>
+            <?php $subtotal += $cart['discounted_price'] * $cart['qty'] ?>
           <?php endforeach; ?>
           <li class="w-full bg-white shadow-md px-4 py-8">
             <h1 class="text-lg">Ongkir</h1>
@@ -114,7 +114,7 @@ $subtotal = 0;
               <li class="relative w-full my-6 flex justify-between gap-8">
                 <div class="flex flex-col gap-2 w-full  bg-white shadow-md px-4 py-8">
                   <p class="text-lg">Address:</p>
-                  <input type="text" class="p-2" value="<?= $u['address']; ?>" disabled>
+                  <input type="text" class="p-2" name="address" value="<?= $u['address']; ?>">
                 </div>
                 <div class="flex flex-col gap-2 w-full  bg-white shadow-md px-4 py-8">
                   <p class="text-lg">Phone Number:</p>
