@@ -93,8 +93,10 @@ $subtotal = 0;
             <p class="opacity-75 text-md">Rp. 3.000</p>
           </li>
           <?php $subtotal += 3000 ?>
-          <!-- <input type="hidden" name="subtotal" id="subtotal" value="<?= $subtotal ?>"> -->
-          <h1 class="text-lg px-4 py-8" id="displayDiscount">Total, Rp. <span id="total"><?= number_format($subtotal, 0, ".", ".") ?></span></h1>
+          <h1 class="text-lg px-4 py-8" id="displayDiscount">
+            Total, Rp. <span id="total"><?= number_format($subtotal, 0, ".", ".") ?></span>
+          </h1>
+          <input type="hidden" name="subtotal" id="subtotal" value="<?= $subtotal ?>">
           <div class="flex gap-8">
             <input type="text" name="code" id="coupon" class="w-full border uppercase">
             <button type="button" onclick="getDiscount()" class="bg-blue-600 text-white w-full py-4 px-2">Try</button>
@@ -191,7 +193,8 @@ $subtotal = 0;
         .then(response => response.text())
         .then(result => {
           let discountedPrice = parseFloat(total) - (parseFloat(total) * result);
-          document.querySelector("#displayDiscount").innerHTML = `Total, <s>Rp. ${total}</s> Rp. ${discountedPrice}`
+          var formattedNumber = new Intl.NumberFormat('id-ID').format(discountedPrice);
+          document.querySelector("#displayDiscount").innerHTML = `Total, <s>Rp. ${total}</s> <span id='subtotal'>Rp. ${formattedNumber}rb</span>`
         })
         .catch(error => console.error(error));
     }
