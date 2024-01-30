@@ -92,11 +92,11 @@ $subtotal = 0;
             <h1 class="text-lg">Ongkir</h1>
             <p class="opacity-75 text-md">Rp. 3.000</p>
           </li>
-          <li class="w-full bg-white shadow-md px-4 py-8" id="displayCoupon"></li>
           <?php $subtotal += 3000 ?>
-          <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
+          <!-- <input type="hidden" name="subtotal" id="subtotal" value="<?= $subtotal ?>"> -->
+          <h1 class="text-lg px-4 py-8" id="displayDiscount">Total, Rp. <span id="total"><?= number_format($subtotal, 0, ".", ".") ?></span></h1>
           <div class="flex gap-8">
-            <input type="text" name="code" id="coupon" class="w-full border">
+            <input type="text" name="code" id="coupon" class="w-full border uppercase">
             <button type="button" onclick="getDiscount()" class="bg-blue-600 text-white w-full py-4 px-2">Try</button>
           </div>
           <ul class="relative w-full">
@@ -180,17 +180,20 @@ $subtotal = 0;
     }
 
     function getDiscount() {
-      var coupon = document.querySelector("#coupon").value;
-      var xhttp = new XMLHttpRequest();
-
-      xhttp.open("POST", "coupon.php");
-      xhttp.onreadystatechange = function() {
-        if(xhttp.readyState == 4 && xhttp.status == 200) {
-          document.querySelector("#displayCoupon").innerHTML = xhttp.responseText
-        }
-      }
-
-      xhttp.send("code=" + encodeURIComponent(coupon));
+      var total = document.querySelector("#total").innerText;
+      fetch("coupon.php", {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: "code=" + encodeURIComponent(document.querySelector("#coupon").value)
+        })
+        .then(response => response.text())
+        .then(result => {
+          let discountedPrice = parseFloat(total) - (parseFloat(total) * result);
+          document.querySelector("#displayDiscount").innerHTML = `Total, <s>Rp. ${total}</s> Rp. ${discountedPrice}`
+        })
+        .catch(error => console.error(error));
     }
   </script>
 </body>
