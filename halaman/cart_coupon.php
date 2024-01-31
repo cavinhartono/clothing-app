@@ -194,7 +194,7 @@ $subtotal = 0;
         .then(result => {
           let discountedPrice = parseFloat(total) - (parseFloat(total) * result);
           var formattedNumber = new Intl.NumberFormat('id-ID').format(discountedPrice);
-          document.querySelector("#displayDiscount").innerHTML = `Total, <s>Rp. ${total}</s> <span id='subtotal'>Rp. ${formattedNumber}rb</span>`
+          document.querySelector("#displayDiscount").innerHTML = `Total, <s>Rp. <span id="total">${total}</span></s> <span id='subtotal'>Rp. ${formattedNumber}rb</span>`
         })
         .catch(error => console.error(error));
     }
