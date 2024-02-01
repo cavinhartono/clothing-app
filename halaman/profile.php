@@ -129,7 +129,7 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
               <?php endforeach; ?>
             </ul>
           <?php else : ?>
-            <h1 class="text-6xl">Anda belum membeli melakukan transaksi</h1>
+            <h1 class="my-6 text-lg">Anda belum membeli melakukan transaksi</h1>
           <?php endif; ?>
         </section>
       </div>

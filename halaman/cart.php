@@ -16,7 +16,7 @@ $auth = $_SESSION['auth'];
 
 if (!isset($auth)) {
   $_SESSION['counter'] = 0;
-  echo "<script>window.location.href ='login.php'</script>";
+  echo "<script>window.location.href = 'login.php'</script>";
 }
 
 if (isset($_POST['submit'])) {
@@ -93,9 +93,10 @@ $subtotal = 0;
             <p class="opacity-75 text-md">Rp. 3.000</p>
           </li>
           <?php $subtotal += 3000 ?>
+          <h1 class="text-lg px-4">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
           <ul class="relative w-full">
             <?php
-            $users = $db->prepare("SELECT `name`, `email`, `address` FROM `users` WHERE `id` = $auth");
+            $users = $db->prepare("SELECT `name`, `email`, `address`, `phone_number` FROM `users` WHERE `id` = $auth");
             $users->execute();
 
             $user = $users->fetchAll(PDO::FETCH_ASSOC);
@@ -118,12 +119,29 @@ $subtotal = 0;
                 </div>
                 <div class="flex flex-col gap-2 w-full  bg-white shadow-md px-4 py-8">
                   <p class="text-lg">Phone Number:</p>
-                  <input type="text" class="p-2" value="081232134321" disabled>
+                  <?php if (!empty($u['phone_number'])) : ?>
+                    <input type="text" class="p-2" value="<?= $u['phone_number'] ?>" disabled>
+                  <?php else : ?>
+                    <input type="text" class="p-2">
+                  <?php endif ?>
+                </div>
+              </li>
+              <li class="relative w-full my-6 flex justify-between gap-8">
+                <div class="flex flex-col gap-2 w-full  bg-white shadow-md px-4 py-8">
+                  <p class="text-lg">Payment Type:</p>
+                  <select onchange="showTunai()" name="payment_type" id="paymentType">
+                    <option value="cod">COD</option>
+                    <option value="master_card">Credit Card</option>
+                  </select>
+                </div>
+                <div class="flex flex-col gap-2 w-full  bg-white shadow-md px-4 py-8">
+                  <p class="text-lg">Master Card:</p>
+                  <input type="text" name="code" id="masterCard" class="p-2" disabled>
                 </div>
               </li>
             <?php endforeach; ?>
           </ul>
-          <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
+          <input type="hidden" name="subtotal" value="<?= $subtotal ?>">
           <button name='submit' <?php if (empty($carts)) : ?> disabled <?php endif; ?> class="w-[150px] py-4 bg-blue-600 text-white rounded-md disabled:opacity-50">Buy</button>
         <?php else : ?>
           <li class="w-full bg-white shadow-md px-4 py-8">
@@ -146,6 +164,20 @@ $subtotal = 0;
     }
 
     window.addEventListener('scroll', scrolled);
+
+    function showTunai() {
+      var selectedOption = document.querySelector("#paymentType").value;
+      var masterCard = document.querySelector("#masterCard");
+
+      switch (selectedOption) {
+        case "cod":
+          masterCard.disabled = true;
+          break;
+        case "master_card":
+          masterCard.disabled = false;
+          break;
+      }
+    }
   </script>
 </body>
 
