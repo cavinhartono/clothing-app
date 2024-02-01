@@ -17,7 +17,8 @@ $statement_one->execute();
 
 $user = $statement_one->fetchAll(PDO::FETCH_ASSOC);
 
-$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty`, `created_at` FROM `orders` 
+$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty`, `created_at` 
+                              FROM `orders` 
                               INNER JOIN `products` ON `orders`.`product_id` = `products`.`id`
                               WHERE `user_id` = $auth
                               ORDER BY `date` DESC
@@ -99,11 +100,29 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
                     <div class="mx-4">
                       <?php if ($order['status'] == 'pending') : ?>
                         <span class="px-4 py-2 bg-orange-500 text-white rounded-full">
-                          Delivery
+                          <?php
+                          $date = new DateTime();
+
+                          if ($order['date'] <= date("Y-m-d H:i:s")) {
+                            $statement = $db->prepare("UPDATE `orders`
+                                                      SET `status` = 'paid'
+                                                      WHERE `date` = $order[date]");
+                            $statement->execute();
+                          } else {
+                            $calculated = $date->diff(new DateTime($order['date']));
+                            if ($calculated->days <= 1) {
+                              $days = "$calculated->days day to go";
+                            } else {
+                              $days = "$calculated->days days to go";
+                            }
+                          }
+
+                          echo $days;
+                          ?>
                         </span>
                       <?php else : ?>
                         <span class="px-4 py-2 bg-green-600 text-white rounded-full">
-                          Complate
+                          Complete
                         </span>
                       <?php endif ?>
                       <h1 class="mt-2 text-2xl font-serif"><?= $order['name'] ?></h1>

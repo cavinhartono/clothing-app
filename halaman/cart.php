@@ -93,7 +93,7 @@ $subtotal = 0;
             <p class="opacity-75 text-md">Rp. 3.000</p>
           </li>
           <?php $subtotal += 3000 ?>
-          <h1 class="text-lg px-4">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
+          <h1 class="text-lg px-4 py-8">Total, Rp. <?= number_format($subtotal, 0, ".", ".") ?></h1>
           <ul class="relative w-full">
             <?php
             $users = $db->prepare("SELECT `name`, `email`, `address`, `phone_number` FROM `users` WHERE `id` = $auth");

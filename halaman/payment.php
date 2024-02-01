@@ -15,7 +15,7 @@
   <div id="display"></div>
   <script>
     function getPayment() {
-      fetch("payment_api.php", {
+      fetch("PaymentApi.php", {
           method: 'POST',
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
