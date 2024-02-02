@@ -103,7 +103,7 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
                           <?php
                           $date = new DateTime();
 
-                          if ($order['date'] <= date("Y-m-d H:i:s")) {
+                          if ($order['date'] >= $date) {
                             $statement = $db->prepare("UPDATE `orders`
                                                       SET `status` = 'paid'
                                                       WHERE `date` = $order[date]");
