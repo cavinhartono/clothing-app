@@ -11,6 +11,7 @@ include_once('../algoritma/Config.php');
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../style/output.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
   <title>Home</title>
 </head>
 
@@ -46,7 +47,7 @@ include_once('../algoritma/Config.php');
         <span class="text-6xl"> Discount All Item up to</span> <br>
         <span class="text-[96px] font-extrabold py-8">75</span><s class="text-[48px] font-extrabold">%</s>
       </h1>
-      <img src="./gambar/hero_image.png" class="w-[450px] h-[610px]">
+      <img data-aos="zoom-in-up" src="./gambar/hero_image.png" class="w-[450px] h-[610px]">
     </div>
     <div class="p-6 flex w-[200%]" id="marquee">
       <h1 class="text-[76px]"><span id="discount">DISCOUNT ALL ITEM</span> UP TO 75%</h1>
@@ -55,9 +56,9 @@ include_once('../algoritma/Config.php');
     <section class="p-[100px] w-full flex justify-center gap-24 items-center">
       <img src="./gambar/product_17.png" class="w-[350px] h-auto">
       <div class="flex flex-col gap-8">
-        <h1 class="w-[150px] py-2 bg-blue-500 rounded-full text-white text-center">Coming Soon</h1>
-        <h1 class="text-6xl font-serif text-[#2B334A]">Leather Jacket <br /> Biawak Aseli</h1>
-        <div class="relative">
+        <h1 data-aos="fade-up" data-aos-anchor-placement="center-bottom" class="w-[150px] py-2 bg-blue-500 rounded-full text-white text-center">Coming Soon</h1>
+        <h1 data-aos="fade-up" data-aos-delay="300" data-aos-anchor-placement="center-bottom" class="text-6xl font-serif text-[#2B334A]">Leather Jacket <br /> Biawak Aseli</h1>
+        <div data-aos="fade-up" data-aos-delay="600" data-aos-anchor-placement="center-bottom" class="relative">
           <h1 class="text-3xl font-serif opacity-50"><s>Rp. 400.000</s></h1>
           <h1 class="text-5xl font-serif">Rp. 300.000</h1>
         </div>
@@ -101,6 +102,10 @@ include_once('../algoritma/Config.php');
     }
 
     window.addEventListener('scroll', scrolled);
+  </script>
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
   </script>
 </body>
 

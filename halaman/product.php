@@ -72,7 +72,7 @@ require_once("../algoritma/Config.php");
           <?php endif; ?>
           <div class='my-4 flex'>
             <form action='./cart.php' method='POST'>
-              <input type='number' name='qty' value='1' class='border text-4xl py-4 w-[100px]' />
+              <input type='number' name='qty' min="1" value='1' class='border text-4xl py-4 w-[100px]' />
               <input type='hidden' name='product_id' value="<?= $p['id'] ?>" />
               <button type='submit' name='submit' class='px-12 py-4 bg-blue-500 text-white rounded-sm'>Cart</button>
             </form>
