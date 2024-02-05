@@ -74,18 +74,17 @@ include_once('../algoritma/Config.php');
 
         $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($products as $product) {
-          $persentage = $product['discount'] * 100;
-          echo "<li class='group relative'>
-            <a href='./product.php?id=$product[product_id]'>
-              <img src='./gambar/$product[src]' class='w-[350px] h-auto'>
+        ?>
+        <?php foreach ($products as $product) : ?>
+          <li class='group relative'>
+            <a href='./product.php?id=<?= $product['product_id'] ?>'>
+              <img src='./gambar/<?= $product['src'] ?>' class='w-[350px] h-auto'>
               <div class='absolute top-0 left-0 w-full h-full bg-gradient-to-t from-[#222222BF] to-[#22222200] flex justify-center items-center overflow-hidden opacity-0 transition-all group-hover:overflow-visible group-hover:opacity-100'>
-                <h1 class='font-serif text-8xl text-white'>$persentage%</h1>
+                <h1 class='font-serif text-8xl text-white'><?= $product['discount'] * 100 ?>%</h1>
               </div>
             </a>
-          </li>";
-        }
-        ?>
+          </li>
+        <?php endforeach; ?>
       </ul>
     </section>
     <footer class="pb-4 px-[100px]">&copy; Tugas Logika dan Algoritma oleh Kelompok 8&trade;</footer>
