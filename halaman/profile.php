@@ -17,7 +17,7 @@ $statement_one->execute();
 
 $user = $statement_one->fetchAll(PDO::FETCH_ASSOC);
 
-$statement_two = $db->prepare("SELECT `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty`, `created_at` 
+$statement_two = $db->prepare("SELECT `orders`.`id`, `products`.`src`, `products`.`name`, `total`, `status`, `date`, `qty`, `created_at` 
                               FROM `orders` 
                               INNER JOIN `products` ON `orders`.`product_id` = `products`.`id`
                               WHERE `user_id` = $auth
@@ -106,7 +106,7 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
                           if ($order['date'] >= $date) {
                             $statement = $db->prepare("UPDATE `orders`
                                                       SET `status` = 'paid'
-                                                      WHERE `date` = $order[date]");
+                                                      WHERE `id` = $order[id]");
                             $statement->execute();
                           } else {
                             $calculated = $date->diff(new DateTime($order['date']));
