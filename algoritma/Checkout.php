@@ -5,7 +5,6 @@ require_once('./Config.php');
 $auth = $_SESSION['auth'];
 
 if (isset($_POST['submit'])) {
-  $subtotal = $_POST['subtotal'];
   $code = $_POST['code'];
   $payment_type = $_POST['payment_type'];
 
@@ -33,7 +32,7 @@ if (isset($_POST['submit'])) {
   foreach ($carts as $cart) {
     $order = $db->prepare("INSERT INTO orders(`total`, `product_id`, `user_id`, `qty`, `address`, `payment_type`, `master_card_id`) 
                           VALUES (:total, :product_id, :user_id, :qty, :address, :payment_type, :master_card_id)");
-    $order->bindParam(":total", $subtotal);
+    $order->bindParam(":total", $cart['subtotal']);
     $order->bindParam(":qty", $cart['qty']);
     $order->bindParam(":product_id", $cart['product_id']);
     $order->bindParam(":user_id", $_SESSION['auth']);
@@ -45,7 +44,7 @@ if (isset($_POST['submit'])) {
       } else {
         echo "<script>
           alert('Saldo kartu kredit Anda kurang!');
-          window.location.href = 'cart.php';
+          window.location.href = '../halaman/cart.php';
         </script>";
       }
     } else {
