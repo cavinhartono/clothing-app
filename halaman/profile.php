@@ -101,12 +101,13 @@ $orders = $statement_two->fetchAll(PDO::FETCH_ASSOC);
                       <?php if ($order['status'] == 'pending') : ?>
                         <span class="px-4 py-2 bg-orange-500 text-white rounded-full">
                           <?php
-                          $date = new DateTime();
+                          $date = new DateTime("now");
 
-                          if ($order['date'] >= $date) {
+                          if ($order['date'] > $date) {
                             $statement = $db->prepare("UPDATE `orders`
                                                       SET `status` = 'paid'
                                                       WHERE `id` = $order[id]");
+                            $days = "";
                             $statement->execute();
                           } else {
                             $calculated = $date->diff(new DateTime($order['date']));
